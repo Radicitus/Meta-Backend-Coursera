@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPer
 from .permission import IsManager
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
-from django.core import serializers
 
 
 class MenuItemsView(generics.ListCreateAPIView):
@@ -32,9 +31,9 @@ class SingleMenuItemView(generics.RetrieveUpdateDestroyAPIView):
             return [DjangoModelPermissions()]
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([IsManager])
-def managers_view(request):
+def group_management_managers(request, user_id=None):
     managers = Group.objects.get(name="Manager")
 
     if request.method == 'GET':
@@ -51,4 +50,11 @@ def managers_view(request):
 
         return Response("No username provided.", status.HTTP_400_BAD_REQUEST)
 
-    return Response("Method not allowed.", status.HTTP_405_METHOD_NOT_ALLOWED)
+    if request.method == 'DELETE':
+        if user_id is not None:
+            user = get_object_or_404(User, id=user_id)
+            managers.user_set.remove(user)
+
+            return Response(f'User with id of {user_id} removed from Managers successfully.', status.HTTP_200_OK)
+
+        return Response("No user ID provided.", status.HTTP_400_BAD_REQUEST)
