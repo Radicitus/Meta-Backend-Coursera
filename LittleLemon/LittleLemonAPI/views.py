@@ -1,7 +1,13 @@
+from django.shortcuts import get_object_or_404
 from .models import MenuItem
 from .serializers import MenuItemSerializer
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissions
+from .permission import IsManager
+from rest_framework.response import Response
+from django.contrib.auth.models import User, Group
+from django.core import serializers
 
 
 class MenuItemsView(generics.ListCreateAPIView):
@@ -24,3 +30,24 @@ class SingleMenuItemView(generics.RetrieveUpdateDestroyAPIView):
             return [IsAuthenticatedOrReadOnly()]
         else:
             return [DjangoModelPermissions()]
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsManager])
+def managers_view(request):
+    managers = Group.objects.get(name="Manager")
+
+    if request.method == 'GET':
+        return Response("test", 200)
+
+    if request.method == 'POST':
+        username = request.data['username']
+        if username:
+            user = get_object_or_404(User, username=username)
+            managers.user_set.add(user)
+
+            return Response(f'User {username} added to Managers successfully.')
+
+        return Response("No username provided.", status.HTTP_400_BAD_REQUEST)
+
+    return Response("Method not allowed.", status.HTTP_405_METHOD_NOT_ALLOWED)
