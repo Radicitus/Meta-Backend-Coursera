@@ -38,7 +38,8 @@ def managers_view(request):
     managers = Group.objects.get(name="Manager")
 
     if request.method == 'GET':
-        return Response("test", 200)
+        manager_names = list(managers.user_set.values_list('username', flat=True))
+        return Response(manager_names, 200)
 
     if request.method == 'POST':
         username = request.data['username']
@@ -46,7 +47,7 @@ def managers_view(request):
             user = get_object_or_404(User, username=username)
             managers.user_set.add(user)
 
-            return Response(f'User {username} added to Managers successfully.')
+            return Response(f'User {username} added to Managers successfully.', status.HTTP_201_CREATED)
 
         return Response("No username provided.", status.HTTP_400_BAD_REQUEST)
 
