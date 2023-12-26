@@ -1,7 +1,7 @@
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissions
 
 
 class MenuItemsView(generics.ListCreateAPIView):
@@ -12,7 +12,7 @@ class MenuItemsView(generics.ListCreateAPIView):
         if self.request.method == 'GET':
             return [IsAuthenticatedOrReadOnly()]
         else:
-            return [IsAdminUser()]
+            return [DjangoModelPermissions()]
 
 
 class SingleMenuItemView(generics.RetrieveUpdateAPIView):
@@ -23,4 +23,4 @@ class SingleMenuItemView(generics.RetrieveUpdateAPIView):
         if self.request.method == 'GET':
             return [IsAuthenticatedOrReadOnly()]
         else:
-            return [IsAdminUser()]
+            return [DjangoModelPermissions()]
