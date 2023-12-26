@@ -15,7 +15,7 @@ class MenuItemsView(generics.ListCreateAPIView):
             return [DjangoModelPermissions()]
 
 
-class SingleMenuItemView(generics.RetrieveUpdateAPIView):
+class SingleMenuItemView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
