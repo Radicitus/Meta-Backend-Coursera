@@ -1,34 +1,9 @@
 from django.shortcuts import get_object_or_404
-from .models import MenuItem
-from .serializers import MenuItemSerializer
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissions
-from .permission import IsManager
+from LittleLemonAPI.permissions import IsManager
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
-
-
-class MenuItemsView(generics.ListCreateAPIView):
-    queryset = MenuItem.objects.all()
-    serializer_class = MenuItemSerializer
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [IsAuthenticatedOrReadOnly()]
-        else:
-            return [DjangoModelPermissions()]
-
-
-class SingleMenuItemView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = MenuItem.objects.all()
-    serializer_class = MenuItemSerializer
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [IsAuthenticatedOrReadOnly()]
-        else:
-            return [DjangoModelPermissions()]
 
 
 @api_view(['GET', 'POST', 'DELETE'])
