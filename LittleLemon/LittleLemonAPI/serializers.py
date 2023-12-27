@@ -30,7 +30,8 @@ class CartSerializer(serializers.ModelSerializer):
     menu_item = MenuItemSerializer()
     total = serializers.SerializerMethodField()
 
-    def get_total(self, cart: Cart):
+    @staticmethod
+    def get_total(cart: Cart):
         return cart.quantity * cart.menu_item.price
 
     class Meta:
