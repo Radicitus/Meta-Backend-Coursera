@@ -2,10 +2,9 @@ from LittleLemonAPI.models import Cart
 from LittleLemonAPI.permissions import IsCustomer
 from LittleLemonAPI.serializers import CartSerializer
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissions
 
 
-class CartView(generics.ListCreateAPIView):
+class CartView(generics.ListCreateAPIView, generics.DestroyAPIView):
     serializer_class = CartSerializer
 
     def get_queryset(self):
