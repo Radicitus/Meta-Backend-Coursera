@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from rest_framework import serializers
-from .models import MenuItem, Category, Cart, Order
+from .models import MenuItem, Category, Cart, Order, OrderItem
 from django.contrib.auth.models import User
 
 
@@ -50,6 +50,30 @@ class CartSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     delivery_crew = UserSerializer(read_only=True)
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+
+        # Get cart of user
+        cart = Cart.objects.filter(user=user)
+
+        # Get total price for all items in cart
+        total = 0.0
+        for cart_item in cart:
+            total += cart_item.menu_item.price * cart_item.quantity
+
+        # Create order object
+        new_order = Order.objects.create(user=user, total=total)
+
+        # Convert cart items into order items
+        for cart_item in cart:
+            OrderItem.objects.create(order=new_order, menu_item=cart_item.menu_item,
+                                     quantity=cart_item.quantity)
+
+        # Empty cart
+        cart.delete()
+
+        return new_order
 
     class Meta:
         model = Order
