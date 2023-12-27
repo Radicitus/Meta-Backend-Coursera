@@ -39,6 +39,10 @@ class Order(models.Model):
     total = models.DecimalField(max_digits=6, decimal_places=2)
     date = models.DateField(db_index=True)
 
+    def __str__(self):
+        return (self.user.username + ': ' + self.delivery_crew.username + ", "
+                + str(self.total) + ", " + str(self.date))
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(User, on_delete=models.CASCADE)

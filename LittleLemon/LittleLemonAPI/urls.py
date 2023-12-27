@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GroupManagementViews, MenuItemViews, CartViews
+from .views import GroupManagementViews, MenuItemViews, CartViews, OrderViews
 
 urlpatterns = [
     # Menu Items
@@ -11,6 +11,8 @@ urlpatterns = [
     path('groups/delivery-crew/users', GroupManagementViews.group_management_delivery_crew),
     path('groups/delivery-crew/users/<int:user_id>', GroupManagementViews.group_management_delivery_crew),
     # Cart
-    path('cart/menu-items', CartViews.CartView.as_view())
+    path('cart/menu-items', CartViews.CartView.as_view()),
+    # Order
+    path('orders', OrderViews.OrdersView.as_view()),
 ]
 
