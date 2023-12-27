@@ -53,3 +53,7 @@ class OrderItem(models.Model):
 
     class Meta:
         unique_together = ('order', 'menu_item')
+
+    def __str__(self):
+        return (str(self.order.id) + '/' + self.order.user.username + " : " + self.menu_item.title
+                + " x " + str(self.quantity))
