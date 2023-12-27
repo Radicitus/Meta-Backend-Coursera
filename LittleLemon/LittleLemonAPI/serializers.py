@@ -34,6 +34,14 @@ class CartSerializer(serializers.ModelSerializer):
     def get_total(cart: Cart):
         return cart.quantity * cart.menu_item.price
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        menu_item = MenuItem.objects.get(**validated_data.pop('menu_item'))
+        quantity = validated_data.pop('quantity')
+
+        instance = Cart.objects.create(user=user, menu_item=menu_item, quantity=quantity)
+        return instance
+
     class Meta:
         model = Cart
         fields = ['id', 'user', 'menu_item', 'quantity', 'total']
