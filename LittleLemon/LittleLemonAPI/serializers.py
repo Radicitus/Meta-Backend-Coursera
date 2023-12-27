@@ -39,8 +39,8 @@ class CartSerializer(serializers.ModelSerializer):
         menu_item = MenuItem.objects.get(**validated_data.pop('menu_item'))
         quantity = validated_data.pop('quantity')
 
-        instance = Cart.objects.create(user=user, menu_item=menu_item, quantity=quantity)
-        return instance
+        new_cart = Cart.objects.create(user=user, menu_item=menu_item, quantity=quantity)
+        return new_cart
 
     class Meta:
         model = Cart
