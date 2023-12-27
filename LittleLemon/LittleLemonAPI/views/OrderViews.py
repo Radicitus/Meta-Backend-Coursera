@@ -18,3 +18,11 @@ class OrdersView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         return [IsAuthenticated()]
+
+
+class SingleOrderView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+
+    def get_permissions(self):
+        return [IsAuthenticated()]
