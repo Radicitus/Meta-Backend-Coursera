@@ -1,16 +1,20 @@
 from django.contrib.auth.models import User
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-
 from LittleLemonAPI.models import Order, OrderItem
 from LittleLemonAPI.permissions import IsCustomer, IsManager, IsDeliveryCrew
 from LittleLemonAPI.serializers import OrderSerializer, OrderItemSerializer
-from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import generics, status, filters
+from rest_framework.permissions import IsAuthenticated
 
 
 class OrdersView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
+
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['status', 'delivery_crew', 'date', 'user']
+    ordering_fields = ['total', 'status', 'delivery_crew', 'date', 'user']
 
     def get_queryset(self):
         if IsManager.check(self.request):
