@@ -27,7 +27,10 @@ class OrdersView(generics.ListCreateAPIView):
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def SingleOrderView(request, order_id):
-    order = Order.objects.get(id=order_id)
+    try:
+        order = Order.objects.get(id=order_id)
+    except:
+        return Response("Order does not exist.", status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         if order.user == request.user or IsManager.check(request):
@@ -68,3 +71,10 @@ def SingleOrderView(request, order_id):
 
         else:
             return Response("You are not authorized to update this order.", status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == 'DELETE':
+        if IsManager.check(request):
+            order.delete()
+            return Response("Order has been deleted.", status.HTTP_200_OK)
+        else:
+            return Response("You are not authorized to delete this order.", status.HTTP_401_UNAUTHORIZED)
