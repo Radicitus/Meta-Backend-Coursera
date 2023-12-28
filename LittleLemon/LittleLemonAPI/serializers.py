@@ -1,6 +1,9 @@
 from decimal import Decimal
+from sqlite3 import Date
 
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
+
 from .models import MenuItem, Category, Cart, Order, OrderItem
 from django.contrib.auth.models import User
 
@@ -50,6 +53,9 @@ class CartSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     delivery_crew = UserSerializer(read_only=True)
+    status = serializers.BooleanField(read_only=True)
+    total = serializers.DecimalField(read_only=True, max_digits=6, decimal_places=2)
+    date = serializers.DateField(read_only=True)
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -57,13 +63,17 @@ class OrderSerializer(serializers.ModelSerializer):
         # Get cart of user
         cart = Cart.objects.filter(user=user)
 
+        # Return empty list if cart is empty
+        if cart.count() < 1:
+            return []
+
         # Get total price for all items in cart
-        total = 0.0
+        total = Decimal()
         for cart_item in cart:
             total += cart_item.menu_item.price * cart_item.quantity
 
         # Create order object
-        new_order = Order.objects.create(user=user, total=total)
+        new_order = Order.objects.create(user=user, total=total, date=Date.today())
 
         # Convert cart items into order items
         for cart_item in cart:

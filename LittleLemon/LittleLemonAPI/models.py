@@ -40,8 +40,7 @@ class Order(models.Model):
     date = models.DateField(db_index=True)
 
     def __str__(self):
-        return (self.user.username + ': ' + self.delivery_crew.username + ", "
-                + str(self.total) + ", " + str(self.date))
+        return self.user.username + ': ' + str(self.total) + ", " + str(self.date)
 
 
 class OrderItem(models.Model):
