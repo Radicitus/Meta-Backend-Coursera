@@ -88,3 +88,13 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'user', 'delivery_crew', 'status', 'total', 'date']
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    order = OrderSerializer(read_only=True)
+    menu_item = MenuItemSerializer(read_only=True)
+    quantity = serializers.DecimalField(read_only=True, max_digits=6, decimal_places=2)
+
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'order', 'menu_item', 'quantity']
