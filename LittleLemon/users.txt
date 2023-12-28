@@ -10,3 +10,7 @@ testNewManager
 Password:
 
 test@123!
+
+
+
+To use my Insomnia requests, import the Insomnia Requests file into Insomnia.
