@@ -1,0 +1,12 @@
+Users:
+
+camcam
+testCustomer
+testDelivery
+testNewDelivery
+testManager
+testNewManager
+
+Password:
+
+test@123!
