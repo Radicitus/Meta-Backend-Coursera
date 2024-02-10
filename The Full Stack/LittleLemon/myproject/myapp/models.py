@@ -7,5 +7,5 @@ class Booking(models.Model):
     reservation_date = models.DateField()
     reservation_slot = models.SmallIntegerField(default=10)
 
-    def __str__(self): 
+    def __str__(self):
         return self.first_name
