@@ -4,7 +4,7 @@
 {% block content %}
 <section>
   <article>
-    <h1><!--Add title here --></h1>
+    <h1>All reservations</h1>
     <!--Begin row-->
     <div class="row">
       <!--Begin col-->
@@ -34,7 +34,9 @@
 
 <!-- Add your code inside the script tags below  -->
 <script>
-
+    bookings = JSON.parse('{{ bookings | safe }}')
+    console.log(bookings)
+    pretty_json = JSON.stringify(bookings, null, 2)
 </script>
 {% endblock %}
 
